@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: prosody
+  name: prosody
+  namespace: jitsi
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      k8s-app: prosody
+  template:
+    metadata:
+      labels:
+        k8s-app: prosody
+    spec:
+      containers:
+        - name: prosody
+          image: jitsi/prosody
+          imagePullPolicy: Always
+          env:
+            - name: XMPP_DOMAIN
+              value: meet.jitsi
+            - name: XMPP_AUTH_DOMAIN
+              value: auth.meet.jitsi
+            - name: XMPP_MUC_DOMAIN
+              value: muc.meet.jitsi
+            - name: XMPP_INTERNAL_MUC_DOMAIN
+              value: internal-muc.meet.jitsi
+            - name: JICOFO_COMPONENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-config
+                  key: JICOFO_COMPONENT_SECRET
+            - name: JVB_AUTH_USER
+              value: jvb
+            - name: JVB_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-config
+                  key: JVB_AUTH_PASSWORD
+            - name: JICOFO_AUTH_USER
+              value: focus
+            - name: JICOFO_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jitsi-config
+                  key: JICOFO_AUTH_PASSWORD
+            - name: TZ
+              value: Europe/London
+            - name: JVB_TCP_HARVESTER_DISABLED
+              value: "true"
+            - name: ENABLE_AUTH
+              value: "0"
+            - name: ENABLE_GUESTS
+              value: "1"
+          ports:
+            - containerPort: 5222
+              protocol: TCP
+              name: xmpp-client
+            - containerPort: 5269
+              protocol: TCP
+              name: xmpp-s2s
+            - containerPort: 5280
+              protocol: TCP
+              name: bosh-http
+            - containerPort: 5347
+              protocol: TCP
+              name: components
+            - containerPort: 5281
+              protocol: TCP
+              name: bosh-https

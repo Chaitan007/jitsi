@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-web
+  namespace: jitsi
+spec:
+  tls:
+  - hosts:
+    - meet.nux.com
+    secretName: jitsi-ingress-tls
+  rules:
+  - host: meet.nux.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+
+

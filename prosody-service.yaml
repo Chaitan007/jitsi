@@ -1,0 +1,32 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: xmpp
+  namespace: jitsi
+  labels:
+    k8s-app: prosody
+spec:
+  selector:
+    k8s-app: prosody
+  ports:
+  - name: xmpp-client
+    protocol: TCP
+    port: 5222
+    targetPort: 5222
+  - name: xmpp-s2s
+    protocol: TCP
+    port: 5269
+    targetPort: 5269
+  - name: bosh-http
+    protocol: TCP
+    port: 5280
+    targetPort: 5280
+  - name: components
+    protocol: TCP
+    port: 5347
+    targetPort: 5347
+  - name: bosh-https
+    protocol: TCP
+    port: 5281
+    targetPort: 5281 
+

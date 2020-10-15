@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-jitsi
+  namespace: jitsi
+  annotations:
+        ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+   - hosts:
+      - meet.nux.com
+     secretName: jitsi-ingress-tls
+  rules:
+  - host: meet.nux.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web
+          servicePort: 80
